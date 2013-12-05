@@ -1,0 +1,15 @@
+acme_guestbook_homepage:
+    pattern:  /
+    defaults: { _controller: AcmeGuestbookBundle:Default:index }
+
+acme_guestbook_create:
+    pattern: /create
+    defaults: { _controller: AcmeGuestbookBundle:Default:create }
+
+acme_guestbook_viewPosts:
+    pattern: /view_posts
+    defaults: { _controller: AcmeGuestbookBundle:Default:viewPosts }
+
+acme_guestbook_addPost:
+    pattern: /add_post
+    defaults: { _controller: AcmeGuestbookBundle:Default:addPost }
