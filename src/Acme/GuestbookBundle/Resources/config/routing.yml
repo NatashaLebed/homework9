@@ -7,8 +7,8 @@ acme_guestbook_create:
     defaults: { _controller: AcmeGuestbookBundle:Default:create }
 
 acme_guestbook_viewPosts:
-    pattern: /view_posts
-    defaults: { _controller: AcmeGuestbookBundle:Default:viewPosts }
+    pattern: /view_posts/{page}
+    defaults: { _controller: AcmeGuestbookBundle:Default:viewPosts, page: 1 }
 
 acme_guestbook_addPost:
     pattern: /add_post

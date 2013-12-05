@@ -8,5 +8,8 @@
             class="Acme\GuestbookBundle\Form\Type\GuestsType">
             <tag name="form.type" alias="guests" />
         </service>
+        <service id="pagerfanta.view.default" class="Pagerfanta\View\DefaultView" public="false">
+            <tag name="pagerfanta.view" alias="default" />
+        </service>
     </services>
 </container>
