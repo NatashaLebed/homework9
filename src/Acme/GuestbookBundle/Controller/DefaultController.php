@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Acme\GuestbookBundle\Entity\Guests;
 use Acme\TaskBundle\Form\Type\GuestsType;
 
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\ArrayAdapter;
+
 class DefaultController extends Controller
 {
     public function indexAction()
@@ -29,10 +32,9 @@ class DefaultController extends Controller
         return new Response('Created guest id '.$guest->getId());
     }
 
-    public function viewPostsAction()
+    public function viewPostsAction($page, Request $request)
     {
-        $posts = $this->getDoctrine()
-            ->getRepository('AcmeGuestbookBundle:Guests')
+        $posts = $this->getDoctrine()->getRepository('AcmeGuestbookBundle:Guests')
             ->findAll();
 
         if (!$posts) {
@@ -41,8 +43,23 @@ class DefaultController extends Controller
             );
         }
 
+        if (!$page)
+        {
+            $page = 1;
+        }
+
+        $pager = new Pagerfanta(new ArrayAdapter($posts));
+        $pager->setMaxPerPage(3);
+        $pager->getCurrentPage($page);
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (NotValidCurrentPageException $e) {
+            throw new NotFoundHttpException('Illegal page');
+        }
+
         return $this->render('AcmeGuestbookBundle:Default:viewPost.html.twig', array(
-                'posts' => $posts,
+                'posts' => $pager,
         ));
     }
 
