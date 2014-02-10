@@ -10,6 +10,7 @@ use Acme\TaskBundle\Form\Type\GuestsType;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Acme\GuestbookBundle\Event\MyEvent;
+use Acme\GuestbookBundle\Event\PostAddedEvent;
 
 class DefaultController extends Controller
 {
@@ -66,12 +67,7 @@ class DefaultController extends Controller
     public function addPostAction(Request $request)
     {
         $guest = new Guests();
-//        $guest->setUser('Natasha');
-//        $guest->setMail('1111111@test.com');
-//        $guest->setMessage('Lorem ipsum dolor');
-
         $form = $this->createForm('guests', $guest);
-
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -81,12 +77,15 @@ class DefaultController extends Controller
 
             $message = 'Post is added';
             $event = new MyEvent($message);
-
             $dispatcher = $this->get('event_dispatcher');
-            $dispatcher->dispatch('acme_test_bundle.my_event', $event);
+            $dispatcher->dispatch('acme_guestbook_bundle.my_event', $event);
 
-            return new Response($event->getMessage());
-            //return $this->redirect($this->generateUrl('acme_guestbook_viewPosts'));
+            $event = new PostAddedEvent($guest);
+            $dispatcher = $this->get('event_dispatcher');
+            $dispatcher->dispatch('acme_guestbook_bundle.post_added_event', $event);
+
+            //return new Response($event->getMessage());
+            return $this->redirect($this->generateUrl('acme_guestbook_viewPosts'));
         }
 
         return $this->render('AcmeGuestbookBundle:Default:addPost.html.twig', array(

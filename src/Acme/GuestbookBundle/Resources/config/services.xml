@@ -5,8 +5,8 @@
 
     <parameters>
         <parameter key="my_event_listener.class">Acme\GuestbookBundle\EventListener\MyEventListener</parameter>
+        <parameter key="guest_bundle_listener.class">Acme\GuestbookBundle\EventListener\GuestBundleListener</parameter>
     </parameters>
-
     <services>
         <service id="acme_guestbook.form.type.guests"
             class="Acme\GuestbookBundle\Form\Type\GuestsType">
@@ -15,8 +15,11 @@
         <service id="pagerfanta.view.default" class="Pagerfanta\View\DefaultView" public="false">
             <tag name="pagerfanta.view" alias="default" />
         </service>
-        <service id="acme_test_bundle.my_event_listener" class="%my_event_listener.class%">
-            <tag name="kernel.event_listener" event="acme_test_bundle.my_event" method="onMyEventAction" />
+        <service id="acme_guest_bundle.my_event_listener" class="%my_event_listener.class%">
+            <tag name="kernel.event_listener" event="acme_guestbook_bundle.my_event" method="onMyEventAction" />
+        </service>
+        <service id="acme_guest_bundle.listener" class="%guest_bundle_listener.class%">
+            <tag name="kernel.event_listener" event="acme_guestbook_bundle.post_added_event" method="onPostAddedAction" />
         </service>
     </services>
 </container>
