@@ -7,9 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Acme\GuestbookBundle\Entity\Guests;
 use Acme\TaskBundle\Form\Type\GuestsType;
-
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\ArrayAdapter;
+use Acme\GuestbookBundle\Event\MyEvent;
 
 class DefaultController extends Controller
 {
@@ -79,7 +79,14 @@ class DefaultController extends Controller
             $em->persist($guest);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('acme_guestbook_viewPosts'));
+            $message = 'Post is added';
+            $event = new MyEvent($message);
+
+            $dispatcher = $this->get('event_dispatcher');
+            $dispatcher->dispatch('acme_test_bundle.my_event', $event);
+
+            return new Response($event->getMessage());
+            //return $this->redirect($this->generateUrl('acme_guestbook_viewPosts'));
         }
 
         return $this->render('AcmeGuestbookBundle:Default:addPost.html.twig', array(
